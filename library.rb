@@ -98,8 +98,6 @@ end
 library_class = Library.new
 library_class.library_open
 
-library_class.books
-
 #library_class.reader_read_book("Roman","Chemp")
 library_class.reader_read_book("Romano","Chemp")
 library_class.reader_read_book("Roman","The Death of Achilles")
