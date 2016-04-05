@@ -2,7 +2,7 @@
 
 Library
 Book: title, author
-Order: book, reader, date
+Order: book, reader, date 
 Reader: name, email, city, street, house
 Author: name, biography
 Library: books, orders, readers, authors
