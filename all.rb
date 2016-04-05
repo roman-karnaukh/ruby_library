@@ -162,7 +162,7 @@ class Library < Basic
 	def the_most_popular(object)
 		@library_register = CSV.read('library_register.csv', headers:true)
 		books_string = @library_register.to_s
-		words = books_string.split(/[\s,']/)
+		words = books_string.split(/[\n,'\n]/)
 		#p words
 		frequencies = Hash.new(0)
 		words.each { |word| frequencies[word] += 1 }
@@ -172,12 +172,18 @@ class Library < Basic
 			when 'book'
 			@popular_book = frequencies.select { |word, frequency|  read('books.csv').to_s.include? word }
 			@popular_book = @popular_book.first
-			p "The most popular #{object} is #{@popular_book[0]}, it`s readed #{@popular_book[1]} times"
+			puts "The most popular #{object} is #{@popular_book[0]}, it`s readed #{@popular_book[1]} times"
 
 			when 'reader'
 			@reader_often_takes_the_book = frequencies.select { |word, frequency|  read('readers.csv').to_s.include? word }
 			@reader_often_takes_the_book = @reader_often_takes_the_book.first
-			p "The most popular #{object} is #{@reader_often_takes_the_book[0]}, had readed #{@reader_often_takes_the_book[1]} books"
+			puts "The most popular #{object} is #{@reader_often_takes_the_book[0]}, had readed #{@reader_often_takes_the_book[1]} books"
+			when 'three_most_popular_books'
+			@three_popular_books = frequencies.select { |word, frequency|  read('books.csv').to_s.include? word }
+			@three_popular_books = @three_popular_books[0..2]
+			puts "#{object.capitalize} are:"#{@three_popular_books}
+
+			@three_popular_books.each {|book, raiting| puts book}
 		else
 			puts "Please, clarify your request, I can`t find #{object}!"
 		end
@@ -190,13 +196,15 @@ library_class.library_open
 
 library_class.books
 
-library_class.reader_read_book("Roman","Chemp")
+#library_class.reader_read_book("Roman","Chemp")
 library_class.reader_read_book("Romano","Chemp")
-library_class.reader_read_book("Roman","Chemps")
+library_class.reader_read_book("Roman","The Death of Achilles")
 
 
 library_class.the_most_popular('book')
 library_class.the_most_popular('reader')
+library_class.the_most_popular('three_most_popular_books')
+
 =begin
 p "Test to save/delete Book"
 book_class=Book.new("Clera Pipa", "Raga Bomb")
