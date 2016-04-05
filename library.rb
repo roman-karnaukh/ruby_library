@@ -5,26 +5,6 @@ require_relative 'order'
 require_relative 'book'
 require 'csv'
 
-
-class Author < Basic
-	attr_accessor :name, :biography
-
-	def initialize(name, biography)
-		@name = name
-		@biography = biography
-		@author = [@name, @biography]
-	end
-
-	def save(file = 'authors.csv', variable = @author)
-		super
-	end
-
-	def delete(file = 'authors.csv', variable = @author)
-		super
-	end
-
-end
-
 class Library < Basic
 	attr_reader :books, :orders, :readers, :authors
 	
