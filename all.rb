@@ -1,5 +1,4 @@
 require 'csv'
-require 'date'
 
 class Basic
 	def read(file)
