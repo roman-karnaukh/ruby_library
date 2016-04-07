@@ -36,7 +36,7 @@
 
 				if @books_read.to_s.include? book_title 
 					if @readers_read.to_s.include? reader_name
-						CSV.open('library_register.csv', 'a+') do |file|
+						CSV.open('./data/library_register.csv', 'a+') do |file|
 							file << @record
 						end
 						puts "Record #{@record} saved"
