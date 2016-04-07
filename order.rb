@@ -1,20 +1,12 @@
-require_relative 'basic'
-require 'csv'
+		require_relative 'basic'
+		require 'csv'
 
-class Order < Basic
-	attr_accessor :book, :reader, :date
-	def initialize(book, reader, date)
-		@book = book
-		@reader = reader
-		@date = date
-		@order = [@book, @reader, @date]
-	end
+		class Order
+			include Basic
+			attr_accessor :book, :reader, :date
+			@order = Array.new
 
-	def save(file = 'orders.csv', variable = @order)
-		super
-	end
-
-	def delete(file = 'orders.csv', variable = @order)
-		super
-	end
-end
+			def initialize(book, reader, date)
+				@order = [book, reader, date]
+			end
+		end
