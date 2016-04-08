@@ -8,86 +8,69 @@
 		class Library
 			include Basic
 			attr_reader :books, :orders, :readers, :authors
-				
+			
 			def library_open
-
-				i_want_to_open('books.csv')
-				i_want_to_open('orders.csv')
-				i_want_to_open('authors.csv')
-				i_want_to_open('readers.csv')
-				
-			end
-
-			def put_readers_of_the_book_by_it_index(index)
+				@books = []
+				@orders = []
 				@readers = []
-				puts "Readers who order the book: #{@boooks_array_without_raiting[index]}"
-					CSV.foreach('./data/orders.csv', headers:true) do |row|
-						next if readers.include? row['Reader']
-						@readers << row['Reader'] if row['Book'] == @boooks_array_without_raiting[index]
-					end
-				puts @readers
+				@authors = []
+				load_to_array(@books, "books.csv")
+				load_to_array(@authors, "authors.csv")
+				load_to_array(@readers, "readers.csv")
+				load_to_array(@orders, "orders.csv")
 			end
 
 			def reader_read_book(reader_name, book_title)
-				#@date = Time.new
 				@record = [reader_name,book_title]
 				@books_read = read('books.csv')
 				@readers_read = CSV.read('./data/readers.csv', headers:true)
 
 				if @books_read.to_s.include? book_title 
 					if @readers_read.to_s.include? reader_name
-						CSV.open('./data/library_register.csv', 'a+') do |file|
-							file << @record
-						end
+						CSV.open('./data/library_register.csv', 'a+') {|file| file << @record}
 						puts "Record #{@record} saved"
 					else
-						return p "Error - there is no reader name you entered"
+						p "Error - there is no reader name you entered"
 					end
 				else
 					p "Error - there is no book you selected"
 				end
 			end
 
-			def the_most_popular(object)
-				@library_register = read('library_register.csv')
-				books_string = @library_register.to_s
-				words = books_string.split(/[\n,'\n]/)
-				#p words
+			def the_most_popular_book
+				@popular_book = load_with_raiting.select { |title, frequency|  @books.to_s.include? title }
+				puts "The most popular book is #{@popular_book.first[0]}, it`s readed #{@popular_book.first[1]} times"
+			end
+
+			def the_most_frequent_reader
+				@frequent_reader = load_with_raiting.select { |name, frequency|  @readers.to_s.include? name }
+				puts "The most frequent reader is #{@frequent_reader.first[0]}, had readed #{@frequent_reader.first[1]} books"
+			end
+
+			def three_most_popular_books
+				@three_most_popular_books = load_with_raiting.select { |title, frequency|  @books.to_s.include? title }
+				@books_raiting = []
+				@three_most_popular_books.take(3).each {|book, raiting| @books_raiting.push book}
+				put_readers_by_book_index(rand(0..2))
+			end
+
+			private
+			def load_with_raiting
+				words = read('library_register.csv').to_s.split(/[\n,'\n]/)
 				frequencies = Hash.new(0)
 				words.each { |word| frequencies[word] += 1 }
-				frequencies = frequencies.sort_by {|a, b| b }
+				frequencies = frequencies.sort_by {|name, raiting| raiting }
 				frequencies.reverse!
-				case object
-					when 'book'
-					@popular_book = frequencies.select { |word, frequency|  read('books.csv').to_s.include? word }
-					@popular_book = @popular_book.first
-					puts "The most popular #{object} is #{@popular_book[0]}, it`s readed #{@popular_book[1]} times"
+			end
 
-					when 'reader'
-					@reader_often_takes_the_book = frequencies.select { |word, frequency|  read('readers.csv').to_s.include? word }
-					@reader_often_takes_the_book = @reader_often_takes_the_book.first
-					puts "The most popular #{object} is #{@reader_often_takes_the_book[0]}, had readed #{@reader_often_takes_the_book[1]} books"
-					
-					when 'three_most_popular_books'
-					@three_popular_books = frequencies.select { |word, frequency|  read('books.csv').to_s.include? word }
-					@three_popular_books = @three_popular_books[0..2]
-					puts "#{object.capitalize.gsub!(/[\_]/, " ")} are:"#{@three_popular_books}
-
-					@boooks_array_without_raiting = []
-					@three_popular_books.each {|book, raiting| @boooks_array_without_raiting.push book}
-
-					@boooks_array_without_raiting.each {|book| puts book}
-
-					put_readers_of_the_book_by_it_index(0)
-					put_readers_of_the_book_by_it_index(1)
-					put_readers_of_the_book_by_it_index(2)
-
-				else
-					puts "Please, clarify your request, I can`t find #{object}!"
-				end
+			def put_readers_by_book_index(index)
+				puts "Readers who order one of the tree most readed books: #{@books_raiting[index]}"
+				@most_popular_book_readers = []
+				@orders.each {|title, reader, date| @most_popular_book_readers.push reader if title == @books_raiting[index] }
+				@most_popular_book_readers.uniq.each {|name| p name}
 			end
 		end
-
+   
 
 		library_object = Library.new
 		library_object.library_open
@@ -97,11 +80,11 @@
 		library_object.reader_read_book("Roman","The Death of Achilles")
 
 
-		library_object.the_most_popular('book')
-		library_object.the_most_popular('reader')
-		library_object.the_most_popular('three_most_popular_books')
+		library_object.the_most_popular_book
+		library_object.the_most_frequent_reader
+		library_object.three_most_popular_books
 
-=begin
+
 		p "Test to save/delete Book"
 		book_object=Book.new("Clera Pipa", "Raga Bomb")
 		book_object.save
@@ -116,4 +99,5 @@
 		reader_class = Reader.new("Boris","boris@gmail.com","Dnipro","Svetlaya",'123')
 		reader_class.save
 		reader_class.delete
+=begin
 =end

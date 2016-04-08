@@ -5,12 +5,17 @@
 			def class_name 
 				self.class.name
 			end
+
+			def load_to_array(array, file)
+				CSV.foreach("./data/#{file}") do |line| 
+					next if array.include? line 
+					array.push line
+				end
+			end
 			
 			def i_want_to_open(file_name)
 				puts file_name[/[a-z]+/].capitalize
-				read(file_name).each do |row|
-					p row
-				end
+				read(file_name).each {|row| p row }
 			end
 
 			def variable
@@ -21,8 +26,8 @@
 				"#{class_name.downcase}s.csv"
 			end
 
-			def read(file)
-				CSV.read("./data/#{file}", headers:true)
+			def read(file, headers = true)
+				CSV.read("./data/#{file}", headers:headers)
 			end
 
 
