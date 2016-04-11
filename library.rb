@@ -21,14 +21,10 @@
 			end
 
 			def reader_read_book(reader_name, book_title)
-				@record = [reader_name,book_title]
-				@books_read = read('books.csv')
-				@readers_read = CSV.read('./data/readers.csv', headers:true)
-
-				if @books_read.to_s.include? book_title 
-					if @readers_read.to_s.include? reader_name
-						CSV.open('./data/library_register.csv', 'a+') {|file| file << @record}
-						puts "Record #{@record} saved"
+				if @books.to_s.include? book_title
+					if @readers.to_s.include? reader_name
+						CSV.open('./data/library_register.csv', 'a+') {|file| file << [reader_name,book_title]}
+						puts "Record #{[reader_name,book_title]} saved"
 					else
 						p "Error - there is no reader name you entered"
 					end
@@ -71,7 +67,7 @@
 			end
 		end
    
-
+=begin
 		library_object = Library.new
 		library_object.library_open
 
@@ -91,13 +87,13 @@
 		book_object.delete
 
 		p "Test to save/delete Author"
-		author_class = Author.new("Boris Akunin", "May 20, 1956")
-		author_class.save
-		author_class.delete
+		author_object = Author.new("Boris Akunin", "May 20, 1956")
+		author_object.save
+		author_object.delete
 
 		p "Test to save/delete Reader"
-		reader_class = Reader.new("Boris","boris@gmail.com","Dnipro","Svetlaya",'123')
-		reader_class.save
-		reader_class.delete
-=begin
+		reader_object = Reader.new("Boris","boris@gmail.com","Dnipro","Svetlaya",'123')
+		reader_object.save
+		reader_object.delete
+
 =end
