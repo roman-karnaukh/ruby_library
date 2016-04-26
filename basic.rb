@@ -6,16 +6,15 @@ module Basic
 	  self.class.name
   end
 
-  def load_to_array(array, file)
-	  CSV.foreach("./data/#{file}") do |line|
-    next if array.include? line
-		 array.push line
+  def load(object)
+  	object.each do |name|
+  		instance_variable_set(:"@#{name}", "") #for cleaning
+  	  array = []
+  	  CSV.foreach("./data/#{name}.csv") do |line|
+        array.push line
+	    end
+	    instance_variable_set(:"@#{name}", array)
 	  end
-  end
-
-  def i_want_to_open(file_name)
-  	puts file_name[/[a-z]+/].capitalize
-    read(file_name).each {|row| p row }
   end
 
   def variable
