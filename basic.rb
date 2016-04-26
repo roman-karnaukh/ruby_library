@@ -3,18 +3,18 @@ require 'csv'
 module Basic
 
   def class_name
-	  self.class.name
+    self.class.name
   end
 
   def load(object)
-  	object.each do |name|
-  		instance_variable_set(:"@#{name}", "") #for cleaning
-  	  array = []
-  	  CSV.foreach("./data/#{name}.csv") do |line|
+    object.each do |name|
+      instance_variable_set(:"@#{name}", "") #for cleaning
+      array = []
+      CSV.foreach("./data/#{name}.csv") do |line|
         array.push line
-	    end
-	    instance_variable_set(:"@#{name}", array)
-	  end
+      end
+      instance_variable_set(:"@#{name}", array)
+    end
   end
 
   def get_variables
@@ -25,7 +25,7 @@ module Basic
   end
 
   def file
-	  "#{class_name.downcase}s.csv"
+    "#{class_name.downcase}s.csv"
   end
 
   def read(file, headers = true)
