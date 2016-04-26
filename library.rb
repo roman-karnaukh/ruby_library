@@ -9,7 +9,7 @@ class Library
 	include Basic
 	attr_reader :books, :orders, :readers, :authors
 
-	VARIABLES = ["books","authors","readers","orders"]
+	VARIABLES = %w[books authors readers orders]
 
 	def initialize
 	  @books = []
@@ -35,6 +35,10 @@ class Library
     put_readers_by_book_index(rand(0..2))
 	end
 
+	def save
+		save_all(VARIABLES)
+	end
+
 	private
 	def rating_of(name)
 		name == "books"? @row_index = 0 : @row_index = 1
@@ -49,3 +53,30 @@ class Library
 	  @most_popular_book_readers.uniq.each {|name| p name}
 	end
 end
+
+
+		library_object = Library.new
+
+		library_object.the_most_popular_book
+		library_object.the_most_frequent_reader
+		library_object.three_most_popular_books
+
+
+
+
+		p "Test to save/delete Book"
+		book_object=Book.new("Clera Pipa", "Raga Bomb")
+		book_object.save
+		book_object.delete
+
+		p "Test to save/delete Author"
+		author_object = Author.new("Boris Akunin", "May 20, 1956")
+		author_object.save
+		author_object.delete
+
+		p "Test to save/delete Reader"
+		reader_object = Reader.new("Boris","boris@gmail.com","Dnipro","Svetlaya",'123')
+		reader_object.save
+		reader_object.delete
+
+

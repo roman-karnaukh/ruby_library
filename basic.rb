@@ -17,8 +17,11 @@ module Basic
 	  end
   end
 
-  def variable
-    instance_variable_get(instance_variables.inspect[/@[a-z]+/])
+  def get_variables
+    @@inst_var_arr = []
+    inst_var = instance_variables
+    inst_var.each {|variable| @@inst_var_arr.push instance_variable_get(variable)}
+    return @@inst_var_arr
   end
 
   def file
@@ -26,13 +29,13 @@ module Basic
   end
 
   def read(file, headers = true)
-	  CSV.read("./data/#{file}", headers:headers)
+    CSV.read("./data/#{file}", headers: headers)
   end
 
-
   def save
-  	@readed_file = read(file)
-    if @readed_file.to_a.include? variable
+    variable = get_variables
+    @@readed_file = read(file)
+    if @@readed_file.to_a.include? variable
       puts "#{class_name} #{variable} already exists"
     else
       CSV.open("./data/#{file}", 'a+') { |file| file << variable }
@@ -41,10 +44,11 @@ module Basic
   end
 
   def delete
-    @readed_file = read(file)
-    if @readed_file.to_a.include? variable
+    variable = get_variables
+    @@readed_file = read(file)
+    if @@readed_file.to_a.include? variable
       CSV.open("./data/#{file}", 'w') do |csv|
-      @readed_file.to_a.each { |a| next if a == variable; csv << a}
+      @@readed_file.to_a.each { |a| next if a == variable; csv << a}
     end
       puts "#{class_name} #{variable} deleted"
     else

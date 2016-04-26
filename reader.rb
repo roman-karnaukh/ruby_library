@@ -1,12 +1,11 @@
-		require_relative 'basic'
-		require 'csv'
+require_relative 'basic'
+require 'csv'
 
-		class Reader
-			include Basic
-			attr_accessor :name, :email, :city, :street, :house
-			@reader = Array.new
+class Reader
+  include Basic
+  attr_accessor :name, :email, :city, :street, :house
 
-			def initialize(name, email, city, street, house)
-				@reader = [name, email, city, street, house]
-			end
-		end
+  def initialize(name, email, city, street, house)
+    @name, @email, @city, @street, @house = name, email, city, street, house
+  end
+end

@@ -1,12 +1,11 @@
-		require_relative 'basic'
-		require 'csv'
+require_relative 'basic'
+require 'csv'
 
-		class Book
-			include Basic
-			attr_accessor :title, :author, :book
-			@book = Array.new
+class Book
+  include Basic
+  attr_accessor :title, :author, :book
 
-			def initialize(title, author)
-				@book = [title, author]
-			end
-		end
+  def initialize(title, author)
+    @title, @author = title, author
+  end
+end
