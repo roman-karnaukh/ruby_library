@@ -35,6 +35,10 @@ class Library
     put_readers_by_book_index(rand(0..2))
   end
 
+  def save_all
+    save(VARIABLES)
+  end
+
   private
   def rating_of(name)
     name == "books"? @row_index = 0 : @row_index = 1
@@ -49,3 +53,4 @@ class Library
     @most_popular_book_readers.uniq.each {|name| p name}
   end
 end
+
