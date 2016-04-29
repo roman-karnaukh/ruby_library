@@ -2,10 +2,6 @@ require 'csv'
 
 module Basic
 
-  def class_name
-    self.class.name
-  end
-
   def load(object)
     object.each do |name|
       instance_variable_set(:"@#{name}", "") #for cleaning
@@ -17,42 +13,36 @@ module Basic
     end
   end
 
-  def get_variables
-    @@inst_var_arr = []
-    inst_var = instance_variables
-    inst_var.each {|variable| @@inst_var_arr.push instance_variable_get(variable)}
-    return @@inst_var_arr
+  def get_v
+    @@arry = []
+    $vallue = self.class.name.downcase
+    @@take_values = instance_variables
+    @@take_values.each {|var| @@arry << instance_variable_get(:"#{var}")}
+
+    return @@arry
   end
 
-  def file
-    "#{class_name.downcase}s.csv"
+  def add(arr)
+    @@for_save = instance_variable_get(:"@#{$vallue}s")
+    @@for_save << arr
+    instance_variable_set(:"@#{$vallue}s",  @@for_save)
+    puts "#{$vallue.capitalize} #{arr} added"
   end
 
-  def read(file, headers = true)
-    CSV.read("./data/#{file}", headers: headers)
+  def delete(arr)
+    @@for_save = instance_variable_get(:"@#{$vallue}s")
+    @@for_save.delete arr
+    instance_variable_set(:"@#{$vallue}s",  @@for_save)
+    puts "#{$vallue.capitalize} #{arr} deleted"
   end
 
-  def save
-    variable = get_variables
-    @@readed_file = read(file)
-    if @@readed_file.to_a.include? variable
-      puts "#{class_name} #{variable} already exists"
-    else
-      CSV.open("./data/#{file}", 'a+') { |file| file << variable }
-      puts "Entered #{class_name.downcase}: #{variable} saved"
-    end
-  end
-
-  def delete
-    variable = get_variables
-    @@readed_file = read(file)
-    if @@readed_file.to_a.include? variable
-      CSV.open("./data/#{file}", 'w') do |csv|
-      @@readed_file.to_a.each { |a| next if a == variable; csv << a}
-    end
-      puts "#{class_name} #{variable} deleted"
-    else
-      puts "There is no #{class_name.downcase}: #{variable} you want to delete"
+  def save(object)
+    object.each do |name|
+      @@for_saving = instance_variable_get(:"@#{name}")
+        CSV.open("./data/#{name}.csv", 'w') do |csv|
+        @@for_saving.each { |a| csv << a}
+      end
+      puts "#{name.capitalize} saved to the file #{name}.csv"
     end
   end
 end
